@@ -9,7 +9,7 @@ export type observe<T> = (val: T) => Observer<T>; // 为val创建一个Observer�
  */
 export interface Observer<T> {
     value: T;
-    dep: Dep<T>;
+    dep: Dep<T>; // 挂载在该对象的ob上的依赖，用来收集数组非value的变动
     observeArray(ary: T): void; // 通过observe，为每个数组元素deep创建Observer
     walk(obj: T): void; // 通过defineReactive，为每个对象属性deep创建Observer
 }

@@ -1,6 +1,6 @@
 import { Dep } from "./Dep";
 
-interface Vm {}
+type Vm = Object;
 
 export type parsePath<K, T> = (path: string) => (obj: K) => T; // 解析path，返回一个根据解析的path获取对应值的函数。
 
