@@ -1,5 +1,5 @@
-import Watcher from "./observer/Watcher.js";
-import Observer from "./observer/Observer.js";
+import Watcher from "../Watcher.js";
+import Observer from "../Observer.js";
 
 const data = {
     a: {
