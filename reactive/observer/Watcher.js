@@ -1,4 +1,7 @@
+import { isObject } from "./util.js";
+
 const bailRE = /[^\w.$]/;
+
 function parsePath(path) {
     const segments = path.split(".");
     return function(obj) {
@@ -8,6 +11,33 @@ function parsePath(path) {
         }
         return obj;
     };
+}
+
+const seenObjects = new Set();
+
+function traverse(value) {
+    seenObjects.clear(); // 这样可以共用Set对象，减少创建与GC的开销
+    _traverse(value);
+}
+
+function _traverse(value) {
+    if (!isObject(value) || !Object.isExtensible(value)) {
+        // preventExtensions can`t add __ob__
+        return;
+    }
+    if (value.__ob__) {
+        // getter之后同步的产生Observer
+        const depId = value.__ob__.dep.id;
+        if (seenObjects.has(depId)) return;
+        seenObjects.add(depId);
+    }
+    let i;
+    if (Array.isArray(value)) {
+        i = value.length;
+        while (i--) _traverse(value[i]);
+    } else {
+        Object.keys(value).forEach(key => _traverse(value[key]));
+    }
 }
 
 export default class Watcher {
@@ -31,7 +61,9 @@ export default class Watcher {
         window.target = this; // Vue中使用了 targetStack 来实现
         const value = this.getter(this.vm);
         if (this.deep) {
-            // TODO traverse all deep values，use getter to collect this reference to emit cb when changed deeply
+            // target alive
+            // trigger deep getter recursive
+            traverse(value);
         }
         window.target = undefined;
         return value;

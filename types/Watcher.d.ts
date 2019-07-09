@@ -2,7 +2,11 @@ import { Dep } from "./Dep";
 
 type Vm = Object;
 
-export type parsePath<K, T> = (path: string) => (obj: K) => T; // 解析path，返回一个根据解析的path获取对应值的函数。
+// 解析path，返回一个根据解析的path获取对应值的函数。
+export type parsePath<K, T> = (path: string) => (obj: K) => T;
+
+// 对该值进行deep的访问，保证触发全部的getter，注意obj循环，为了保证target alive 必须同步
+export type traverse = (value: any) => void;
 
 /**
  * 依赖，相应值的变化
