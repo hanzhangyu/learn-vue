@@ -3,6 +3,9 @@
  */
 import Dep from "./Dep.js";
 import { isObject, def } from "./util.js";
+import { arrayMethods } from "./array.js";
+
+const arraykeys = Object.getOwnPropertyNames(arrayMethods);
 
 function defineReactive(data, key, val) {
     const childOb = observe(val);
@@ -40,7 +43,14 @@ export default class Observer {
         def(val, "__ob__", this);
 
         if (Array.isArray(val)) {
-            // TODO listen operator of array
+            // inject mutator for operator
+            if ("__proto__" in {}) {
+                val.__proto__ = arrayMethods;
+            } else {
+                arraykeys.forEach(key => {
+                    val[key] = arrayMethods[key];
+                });
+            }
             this.observeArray(val);
         } else {
             this.walk(val);
