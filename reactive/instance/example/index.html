@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>reactive instance</title>
+        <style>
+        body > button {
+            display: block;
+            margin-top: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        </style>
+    </head>
+    <body>
+        <button id="watch">绑定（先点我）</button>
+        <button id="unwatch">解绑</button>
+        <button id="normal">normal = Math.random()</button>
+        <button id="deep">deepWrap.deep = Math.random()</button>
+        <button id="push">array.push(1)</button>
+        <button id="set">vm.$set(array, 0, Math.random())</button>
+        <button id="del">Vue.$delete(array, 0)</button>
+        <pre id="view"></pre>
+    </body>
+    <script type="module" src="index.js"></script>
+</html>

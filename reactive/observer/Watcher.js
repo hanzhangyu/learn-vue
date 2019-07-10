@@ -25,8 +25,8 @@ function _traverse(value) {
         // preventExtensions can`t add __ob__
         return;
     }
+    // getter之后同步的产生Observer
     if (value.__ob__) {
-        // getter之后同步的产生Observer
         const depId = value.__ob__.dep.id;
         if (seenObjects.has(depId)) return;
         seenObjects.add(depId);
@@ -45,7 +45,7 @@ export default class Watcher {
         this.vm = vm;
         this.deps = [];
         this.depIds = [];
-        this.getter = parsePath(path);
+        this.getter = typeof path === "function" ? path() : parsePath(path);
         this.cb = cb;
 
         if (options) {
@@ -82,7 +82,7 @@ export default class Watcher {
 
     update() {
         const oldVal = this.value;
-        const val = this.get();
-        this.cb.call(this, val, oldVal);
+        this.value = this.get();
+        this.cb.call(this, this.value, oldVal);
     }
 }

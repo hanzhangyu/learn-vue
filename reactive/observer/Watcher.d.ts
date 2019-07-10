@@ -20,7 +20,7 @@ export interface Watcher<T> {
     cb(val: T, oldVal: T): void; // 依赖的回调函数
     value: T; // 响应式的值
     get(): T; // 通过getter获取该值，并触发依赖收集，如果是deep则对所有的子属性触发一次defineReactive的getter操作
-    addDep(dep: Dep<T>): void; // 添加this到依赖收集器
+    addDep(dep: Dep<T>): void; // 添加this到依赖收集器，并把两种dep均收集在自身上
     teardown(): void; // 从所有的依赖收集器中移除本依赖
     update(): void; // 接受更新的handle
 }
