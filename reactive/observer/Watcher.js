@@ -45,7 +45,7 @@ export default class Watcher {
         this.vm = vm;
         this.deps = [];
         this.depIds = [];
-        this.getter = typeof path === "function" ? path() : parsePath(path);
+        this.getter = typeof path === "function" ? path : parsePath(path);
         this.cb = cb;
 
         if (options) {
@@ -82,7 +82,7 @@ export default class Watcher {
 
     update() {
         const oldVal = this.value;
-        this.value = this.get();
+        this.value = this.get(); // 这里的get会在addDep过滤
         this.cb.call(this, this.value, oldVal);
     }
 }
