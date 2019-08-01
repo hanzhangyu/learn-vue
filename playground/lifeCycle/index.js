@@ -15,10 +15,14 @@ Vue.component("todo-item2", {
 });
 
 var app = new Vue({
+    // el: "#ddd",
     data: {
         todo: {
             text: "nothing"
         },
+    },
+    mounted() {
+        this.todo.text = "get";
     }
 });
 app.$mount('#app');
