@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div id="app">
+        <origin-sync v-bind:value="inputOrigin" v-on:update:value="value = $event"></origin-sync>
+    </div>
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+Vue.component('origin-sync', {
+    props: {
+        value: String,
+    },
+    methods: {
+      handleInput(e) {
+          this.$emit('update:value', e.target.value);Ò
+      }
+    },
+    template: `
+    <input v-bind:value="value" v-on:input="handleInput"/>
+    `
+});
+
+// v-bind:title="doc.title"
+// v-on:update:title="doc.title = $event"
+const app = new Vue({
+    el: "#app",
+    data: {
+        inputOrigin: '1',
+    }
+})
+</script>
+</body>
+</html>

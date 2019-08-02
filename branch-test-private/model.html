@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div id="app">
+        <base-input v-model="input" ></base-input>
+        <p>{{input}}</p>
+        <base-checkbox v-model="checked"></base-checkbox>
+        <p>{{checked}}</p>
+        <base-checkbox-ugly v-model="checkedUgly"></base-checkbox-ugly>
+        <p>{{checkedUgly}}</p>
+    </div>
+</head>
+<body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+// 一个组件上的 v-model 默认会利用名为 value 的 prop 和名为 input 的事件，
+Vue.component('base-input', {
+    props: {
+        value: String,
+    },
+    // 使用了v-model默认转换成一个 value prop 和 input event
+    template: `
+    <input v-bind:value="value" v-on:input="$emit('input', $event.target.value)"/>
+    `
+});
+// 但是像单选框、复选框等类型的输入控件可能会将 value 特性用于不同的目的。model 选项可以用来避免这样的冲突：
+Vue.component('base-checkbox', {
+    model: { // 修改model 产生的prop 与event 的名字
+        prop: "checked",
+        event: "change"
+    },
+    props: {
+        checked: Boolean
+    },
+    template:`
+    <input type="checkbox" v-bind:checked="checked" v-on:change="$emit('change', $event.target.checked)" />
+    `
+});
+Vue.component('base-checkbox-ugly', {
+    props: {
+        value: Boolean
+    },
+    // 不改也行，就是名字看着很有歧义
+    template:`
+    <input type="checkbox" v-bind:checked="value" v-on:change="$emit('input', $event.target.checked)" />
+    `
+});
+const app = new Vue({
+    el: "#app",
+    data: {
+        input: '1',
+        checked: false,
+        checkedUgly: false,
+    }
+})
+</script>
+</body>
+</html>

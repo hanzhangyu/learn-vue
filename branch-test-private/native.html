@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+<!--    使用native(监听组件根元素的原生事件)直接绑定在组价root上-->
+    <base-input v-on:input.native="handleInput" v-on:change="handleChange" label="label" :value="input" type="text"></base-input>
+    <ul>
+        <li>input: {{input}}</li>
+        <li>change: {{change}}</li>
+    </ul>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+// TODO native 的input 事件，去了哪里，怎么绑定到input上的？
+Vue.component('base-input', {
+    // 默认情况下父作用域的不被认作 props 的特性绑定 (attribute bindings) 将会“回退”且作为普通的 HTML 特性应用在子组件的根元素上。
+    // 设置false，取消默认设置行为，通过v-bind="$attrs" 绑定到其他节点上
+    inheritAttrs: false,
+    props: ['label', 'value'],
+    computed: {
+        inputListeners: function () {
+            var vm = this;
+            console.log(this);
+            console.log(this.$listeners);
+            console.log(this.$attrs);
+            // `Object.assign` 将所有的对象合并为一个新对象
+            return Object.assign({},
+                // 我们从父级添加所有的监听器（不包含native）
+                this.$listeners,
+                // 然后我们添加自定义监听器，
+                // 或覆写一些监听器的行为
+                {
+                    // 这里确保组件配合 `v-model` 的工作
+                    input: function (event) {
+                        vm.$emit('input', event.target.value)
+                    },
+                    change: function (event) {
+                        vm.$emit('change', event.target.value)
+                    }
+                }
+            )
+        }
+    },
+    template: `
+    <label>
+      {{ label }}
+      <input
+        v-bind="$attrs"
+        v-bind:value="value"
+        v-on="inputListeners"
+      >
+    </label>
+  `
+});
+
+const app = new Vue({
+    el: "#app",
+    data: {
+        input: "1231",
+        change: "",
+    },
+    methods: {
+        handleInput(e) { // native 的具有事件
+            this.input = e.target.value;
+        },
+        handleChange(value) { // 复合事件只有在事件回传的值
+            this.change = value;
+        }
+    }
+})
+</script>
+</body>
+</html>

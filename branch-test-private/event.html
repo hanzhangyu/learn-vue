@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    {{msg}}
+    <comp-event v-on:custom-event="handleTriggered"></comp-event>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+
+Vue.component("comp-event", {
+    methods: {
+        handleClick() {
+            this.$emit("custom-event", "hello world"); // 简单的触发一下即可
+        }
+    },
+    template: `
+    <button v-on:click="handleClick">点击触发</button>
+    `
+});
+
+const app = new Vue({
+    el: "#app",
+    data: {
+        msg: "1231",
+    },
+    methods: {
+        handleTriggered(value) {
+            this.msg = value;
+        },
+    }
+})
+</script>
+</body>
+</html>
