@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>global-api</title>
+</head>
+
+<body>
+<script src="../vue.js"></script>
+
+<div id="extend"></div>
+
+<script>
+
+Vue.directive('my-directive', function () { // Ignored
+    console.log('my-directive Vue')
+});
+
+const options = {
+    name: "Sub",
+    template: "<span v-my-directive>{{message}}</span>",
+    data() {
+        return {
+            message: 'Hello',
+        }
+    }
+};
+const Hello = Vue.extend(options);
+
+Hello.directive('my-directive', function () { // 屏蔽函數
+    console.log('my-directive Hello')
+});
+
+const HelloExtend = Vue.extend(options);
+
+console.log(options._Ctor); // cached class
+console.log(Hello === HelloExtend); // true
+console.log(Hello.options);
+
+const app = new HelloExtend().$mount('#extend');
+</script>
+</body>
+
+</html>
