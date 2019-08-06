@@ -6,8 +6,12 @@
     </head>
     <body>
         <div id="app">
-            <todo-item1 :todo="todo"></todo-item1>
-            <todo-item2 :todo="todo"></todo-item2>
+            <keep-alive>
+                <p>
+                    <todo-item1 :todo="todo"></todo-item1>
+                    <todo-item2 :todo="todo"></todo-item2>
+                </p>
+            </keep-alive>
         </div>
         <script src="../vue.js"></script>
         <script src="index.js"></script>

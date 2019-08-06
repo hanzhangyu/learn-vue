@@ -34,6 +34,9 @@ var app = new Vue({
 });
 app.$mount('#app');
 
+
+console.log(app.$children[0]) // 不指向 keep-alive，过滤了 abstract 组件
+
 console.log(app._data.todo.__ob__.vmCount); // 2
 console.log(app._data.todo === app.$children[0]._data); // true
 console.log(app._data.todo === app.$children[1]._data); // true
