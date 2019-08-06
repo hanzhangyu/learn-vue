@@ -5028,7 +5028,7 @@
   }
 
   function resolveConstructorOptions (Ctor) {
-      debugger;
+      // debugger;
     var options = Ctor.options;
     if (Ctor.super) {
       var superOptions = resolveConstructorOptions(Ctor.super);
@@ -5053,7 +5053,7 @@
   }
 
   function resolveModifiedOptions (Ctor) {
-      debugger;
+      // debugger;
     var modified;
     var latest = Ctor.options;
     var sealed = Ctor.sealedOptions;

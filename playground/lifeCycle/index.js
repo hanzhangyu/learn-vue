@@ -14,6 +14,12 @@ Vue.component("todo-item2", {
     template: "<span>{{ todo.text }}</span>"
 });
 
+Vue.mixin({
+    mounted() {
+        console.log('mixin mounted')
+    }
+})
+
 var app = new Vue({
     // el: "#ddd",
     data: {
@@ -23,6 +29,7 @@ var app = new Vue({
     },
     mounted() {
         this.todo.text = "get";
+        console.log('app mounted')
     }
 });
 app.$mount('#app');

@@ -26,6 +26,9 @@ const options = {
         return {
             message: 'Hello',
         }
+    },
+    created() {
+        console.log("created");
     }
 };
 const Hello = Vue.extend(options);
@@ -40,7 +43,11 @@ console.log(options._Ctor); // cached class
 console.log(Hello === HelloExtend); // true
 console.log(Hello.options);
 
-const app = new HelloExtend().$mount('#extend');
+const app = new HelloExtend({
+    created() {
+        console.log("options created");
+    }
+}).$mount('#extend');
 </script>
 </body>
 
