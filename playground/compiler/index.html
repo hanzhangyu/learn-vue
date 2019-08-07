@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Vue Compiler</title>
+        <style>
+            textarea {
+                background: url(./line_number.png);
+                background-attachment: local;
+                background-repeat: no-repeat;
+                padding-left: 35px;
+                padding-top: 10px;
+                border-color: #ccc;
+                width: 100%;
+                height: 300px;
+                box-sizing: border-box;
+            }
+            #output-ast {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <textarea
+            name=""
+            id="app"
+            placeholder="input code, compile on change, support emmet"
+        ></textarea>
+        <h2>render:</h2>
+        <div id="output-render"></div>
+        <h2>staticRenderFns:</h2>
+        <div id="output-staticRenderFns"></div>
+        <h2>ast:</h2>
+        <pre id="output-ast"></pre>
+        <h2 style="color: red;">error:</h2>
+        <div id="output-error" style="color: red;"></div>
+        <script src="../vue.js"></script>
+        <script>
+            Vue.config.productionTip = false;
+        </script>
+        <script src="vue-template-compiler.browser.js"></script>
+        <script src="emmet.min.js"></script>
+        <script>
+            emmet.require("textarea").setup({
+                pretty_break: true,
+                use_tab: true
+            });
+        </script>
+        <script>
+            const app = document.getElementById("app");
+            const astView = document.getElementById("output-ast");
+            const renderView = document.getElementById("output-render");
+            const staticRenderFnsView = document.getElementById(
+                "output-staticRenderFns"
+            );
+            const errorView = document.getElementById("output-error");
+
+            app.addEventListener("change", function(e) {
+                compile(e.target.value);
+            });
+
+            function compile(value) {
+                const ret = VueTemplateCompiler.compile(value);
+                console.log(ret);
+                const cache = [];
+                const keyCache = [];
+                astView.innerText = JSON.stringify(
+                    ret.ast,
+                    function(key, value) {
+                        if (typeof value === "object" && value !== null) {
+                            const index = cache.indexOf(value);
+                            if (~index) {
+                                return "[Circular " + keyCache[index] + "]";
+                            }
+                            cache.push(value);
+                            keyCache.push(key || "root");
+                        }
+                        return value;
+                    },
+                    2
+                );
+                renderView.innerText = ret.render;
+                staticRenderFnsView.innerText = ret.staticRenderFns.join("\n");
+                staticRenderFnsView.innerText = ret.staticRenderFns.join("\n");
+                errorView.innerText = ret.errors.join("\n");
+            }
+        </script>
+    </body>
+</html>

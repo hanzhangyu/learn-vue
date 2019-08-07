@@ -1,0 +1,4 @@
+lib/*
+playground/vue.js
+*.min.js
+*.browser.js
