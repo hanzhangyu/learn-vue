@@ -2200,6 +2200,7 @@
     createOnceHandler,
     vm
   ) {
+      // debugger;
     var name, def$$1, cur, old, event;
     for (name in on) {
       def$$1 = cur = on[name];
@@ -3755,6 +3756,7 @@
   /*  */
 
   function initEvents (vm) {
+      // debugger;
     vm._events = Object.create(null);
     vm._hasHookEvent = false;
     // init parent attached events
@@ -3775,6 +3777,7 @@
   }
 
   function createOnceHandler (event, fn) {
+      window.test2 = target;
     var _target = target;
     return function onceHandler () {
       var res = fn.apply(null, arguments);
@@ -7494,9 +7497,11 @@
   var target$1;
 
   function createOnceHandler$1 (event, handler, capture) {
+      window.test = target$1;
     var _target = target$1; // save current target element in closure
     return function onceHandler () {
       var res = handler.apply(null, arguments);
+      console.log(res);
       if (res !== null) {
         remove$2(event, onceHandler, capture, _target);
       }
