@@ -19,6 +19,9 @@
                 max-height: 300px;
                 overflow-y: auto;
             }
+            /*pre {*/
+            /*    resize: vertical;*/
+            /*}*/
         </style>
     </head>
     <body>
@@ -28,9 +31,9 @@
             placeholder="input code, compile on change or (ctrl/meta + enter), support emmet"
         ></textarea>
         <h2>render:</h2>
-        <div id="output-render"></div>
+        <pre id="output-render"></pre>
         <h2>staticRenderFns:</h2>
-        <div id="output-staticRenderFns"></div>
+        <pre id="output-staticRenderFns"></pre>
         <h2>ast:</h2>
         <pre id="output-ast"></pre>
         <h2 style="color: red;">error:</h2>
@@ -41,10 +44,11 @@
         </script>
         <script src="vue-template-compiler.browser.js"></script>
         <script src="emmet.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.10.2/beautify.min.js"></script>
         <script>
             emmet.require("textarea").setup({
                 pretty_break: true,
-                use_tab: true
+                use_tab: true,
             });
         </script>
         <script>
@@ -52,15 +56,15 @@
             const astView = document.getElementById("output-ast");
             const renderView = document.getElementById("output-render");
             const staticRenderFnsView = document.getElementById(
-                "output-staticRenderFns"
+                "output-staticRenderFns",
             );
             const errorView = document.getElementById("output-error");
 
             editor.addEventListener("change", function(e) {
                 compile(e.target.value);
             });
-            document.body.addEventListener('keydown', function (e) {
-                if (e.key !== 'Enter') return;
+            document.body.addEventListener("keydown", function(e) {
+                if (e.key !== "Enter") return;
                 if (e.ctrlKey || e.metaKey) compile(editor.value);
             });
 
@@ -82,12 +86,21 @@
                         }
                         return value;
                     },
-                    2
+                    2,
                 );
-                renderView.innerText = ret.render;
-                staticRenderFnsView.innerText = ret.staticRenderFns.join("\n");
-                staticRenderFnsView.innerText = ret.staticRenderFns.join("\n");
+                renderView.innerText = prettier(ret.render);
+                staticRenderFnsView.innerText = ret.staticRenderFns
+                    .map(code => prettier(code))
+                    .join("\n");
                 errorView.innerText = ret.errors.join("\n");
+            }
+
+            function prettier(code) {
+                return js_beautify(code.replace(/(\[|,|\((?='))/g, "$1\n"), {
+                    indent_size: 2,
+                    space_in_empty_paren: true,
+                    indent_empty_lines: true,
+                });
             }
         </script>
     </body>
