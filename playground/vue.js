@@ -1460,6 +1460,7 @@
       );
     }
     options.props = res;
+    // console.log(res)
   }
 
   /**
@@ -4070,6 +4071,7 @@
     // component's mounted hook), which relies on vm._watcher being already defined
     new Watcher(vm, updateComponent, noop, {
       before: function before () {
+          // debugger;
         if (vm._isMounted && !vm._isDestroyed) {
           callHook(vm, 'beforeUpdate');
         }
