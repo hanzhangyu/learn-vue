@@ -24,8 +24,8 @@
     <body>
         <textarea
             name=""
-            id="app"
-            placeholder="input code, compile on change, support emmet"
+            id="editor"
+            placeholder="input code, compile on change or (ctrl/meta + enter), support emmet"
         ></textarea>
         <h2>render:</h2>
         <div id="output-render"></div>
@@ -48,7 +48,7 @@
             });
         </script>
         <script>
-            const app = document.getElementById("app");
+            const editor = document.getElementById("editor");
             const astView = document.getElementById("output-ast");
             const renderView = document.getElementById("output-render");
             const staticRenderFnsView = document.getElementById(
@@ -56,8 +56,12 @@
             );
             const errorView = document.getElementById("output-error");
 
-            app.addEventListener("change", function(e) {
+            editor.addEventListener("change", function(e) {
                 compile(e.target.value);
+            });
+            document.body.addEventListener('keydown', function (e) {
+                if (e.key !== 'Enter') return;
+                if (e.ctrlKey || e.metaKey) compile(editor.value);
             });
 
             function compile(value) {
