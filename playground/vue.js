@@ -7528,9 +7528,11 @@
     // and the handler would only fire if the event passed to it was fired
     // AFTER it was attached.
     if (useMicrotaskFix) {
+        // debugger;
       var attachedTimestamp = currentFlushTimestamp;
       var original = handler;
       handler = original._wrapper = function (e) {
+          // debugger;
         if (
           // no bubbling, should always fire.
           // this is just a safety net in case event.timeStamp is unreliable in

@@ -12,7 +12,7 @@
 
         <div id="app">
             <Foo v-on:hello.once="print"></Foo>
-            <div>
+            <div @click="handleFather">
                 <button @click.once="handleBreakOnce">handleBreakOnce</button>
                 <button @click.once="handleOnce">handleOnce</button>
             </div>
