@@ -1,7 +1,7 @@
 const app = new Vue({
     el: "#app",
     data: {
-        dynamicKey: "test",
+        dynamic: "test",
         obj: {
             a: "A",
             b: "B",

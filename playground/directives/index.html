@@ -11,7 +11,13 @@
         <script src="../vue.js"></script>
 
         <div id="app">
-            <span v-on:click=handleClick v-bind:key="obj" v-bind:[dynamicKey]="obj">click</span>
+            <!-- v-bind:[dynamicKey] 会被 html 改写成 dynamickey，在 js 使用 template 中则没问题   -->
+            <span
+                v-on:click="handleClick"
+                v-bind:prop="obj"
+                v-bind:[dynamic]="obj"
+                >click</span
+            >
         </div>
 
         <script src="index.js"></script>
