@@ -48,6 +48,12 @@ const app = new HelloExtend({
         console.log("options created");
     }
 }).$mount('#extend');
+
+const SubSub = HelloExtend.extend({
+    name: "SubSub",
+    template: "<span>1231</span>",
+});
+console.log(new SubSub() instanceof HelloExtend); // true
 </script>
 </body>
 

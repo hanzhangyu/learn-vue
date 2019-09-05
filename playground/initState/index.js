@@ -32,7 +32,13 @@ const app = new Vue({
                     type: Boolean,
                 },
             },
-            template: "<span>{{propFunc}} {{propVal}} {{propBool}}</span>",
+            get template() {
+                function trackFn() {
+                    console.log('get child template');
+                }
+                trackFn(); // for performance tracking
+                return "<span>{{propFunc}} {{propVal}} {{propBool}}</span>";
+            },
             created() {
                 console.log((window.child = this));
             },
