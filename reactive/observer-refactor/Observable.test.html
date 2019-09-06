@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Test</title>
+    </head>
+    <body>
+        open Console first
+        <script type="module">
+            import Observable from "./Observable.js";
+            window.Observable = Observable;
+
+            // region 初始化 ob
+            let value, oldValue;
+            const observable = new Observable({
+                normal: 1,
+                deepWrap: {
+                    deep: 2,
+                },
+                array: [],
+            });
+
+            observable.subsrible({
+                // 这里是 Watcher 的功能
+                [Symbol.toStringTag]: "Watcher",
+                update(val, oldVal) {
+                    console.log(this, (value = val), (oldValue = oldVal));
+                },
+            });
+            // endregion
+
+            observable.normal = 2;
+            console.assert(
+                value === 2 && oldValue === "1",
+                "should value updated success",
+            );
+        </script>
+    </body>
+</html>
