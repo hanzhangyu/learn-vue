@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
     <head>
         <meta charset="UTF-8" />
         <title>Test</title>
@@ -9,13 +9,17 @@
         <script type="module">
             import Observable from "./Observable.js";
             window.Observable = Observable;
+            const assert = (condition, message, ...data) => {
+                console.assert(condition, message, ...data);
+                console.log("******************");
+            };
 
             // region 初始化 ob
             let value, oldValue;
             const observable = new Observable({
                 normal: 1,
                 deepWrap: {
-                    deep: 2,
+                    deep: 1,
                 },
                 array: [],
             });
@@ -30,9 +34,17 @@
             // endregion
 
             observable.normal = 2;
-            console.assert(
-                value === 2 && oldValue === "1",
+            assert(
+                value === 2 && oldValue === 1,
                 "should value updated success",
+            );
+
+            value = oldValue = null;
+            observable.deepWrap.deep = 2;
+            console.log(value, oldValue);
+            assert(
+                value === 2 && oldValue === 1,
+                "should value deep updated success",
             );
         </script>
     </body>
