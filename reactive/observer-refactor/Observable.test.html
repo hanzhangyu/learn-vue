@@ -23,14 +23,16 @@
                 },
                 array: [],
             });
+            console.log("observable", observable);
 
-            observable.subsrible({
+            observable._subsrible({
                 // 这里是 Watcher 的功能
                 [Symbol.toStringTag]: "Watcher",
                 update(val, oldVal) {
-                    console.log(this, (value = val), (oldValue = oldVal));
+                    console.log("updated", this, (value = val), (oldValue = oldVal));
                 },
             });
+            window.observable = observable;
             // endregion
 
             observable.normal = 2;
@@ -39,12 +41,26 @@
                 "should value updated success",
             );
 
+            // debugger;
             value = oldValue = null;
             observable.deepWrap.deep = 2;
-            console.log(value, oldValue);
             assert(
                 value === 2 && oldValue === 1,
                 "should value deep updated success",
+            );
+
+            value = oldValue = null;
+            observable.array.push('foo');
+            assert(
+                value === 'foo' && oldValue === undefined,
+                "should value array push success",
+            );
+
+            value = oldValue = null;
+            observable.array[0] = 'bar';
+            assert(
+                value === 'bar' && oldValue === 'foo',
+                "should value array updated success",
             );
         </script>
     </body>

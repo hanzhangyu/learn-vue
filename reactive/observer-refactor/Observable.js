@@ -13,50 +13,70 @@ export default class Observable {
      * collect watcher
      * @type {Array<Watcher>}
      */
-    dep = [];
+    _dep = [];
     /**
      * proxy for data
      * @type {Proxy}
      */
-    proxy = null;
+    _proxy = null;
 
-    constructor(data, cb) {
-        this.proxy = this.walk(data);
+    constructor(data) {
+        this._proxy = this.walk(data);
 
-        // 暴露 this.proxy
-        return new Proxy(this, {
-            get: (target, propKey, value, receiver) => {
-                return (
-                    Reflect.get(this.proxy, propKey, receiver) || this[propKey]
-                );
-            },
-            set: (target, propKey, value, receiver) => {
-                return Reflect.set(this.proxy, propKey, value, receiver);
-            },
-        });
+        return this._proxy;
     }
 
     walk(data) {
-        console.log("data", data);
+        // console.log("data", data);
         if (!isObject(data)) {
-            return;
+            return data;
         }
         const keys = Object.keys(data);
         keys.forEach(key => {
-            data[key] = this.walk(data[key]); // fixme
+            data[key] = new Observable(data[key]);
         });
+
+        // console.log("this", this);
 
         return new Proxy(data, {
             set: (target, propKey, value, receiver) => {
-                console.log(target, propKey, value, receiver);
-                this.dep.forEach(watcher =>
-                    watcher.update.call(
-                        this,
-                        value,
-                        Reflect.get(target, propKey),
-                    ),
-                );
+                // console.log(
+                //     "new Proxy",
+                //     target,
+                //     propKey,
+                //     value,
+                //     receiver,
+                //     Reflect.get(target, propKey),
+                //     target === this,
+                // );
+                const mayOldValue = Reflect.get(target, propKey);
+                if (Array.isArray(target)) {
+                    if (propKey !== "length") {
+                        this._dep.forEach(watcher =>
+                            watcher.update.call(
+                                this._proxy,
+                                value,
+                                mayOldValue,
+                            ),
+                        );
+                    }
+                } else {
+                    this._dep.forEach(watcher =>
+                        watcher.update.call(
+                            this._proxy,
+                            value,
+                            mayOldValue._proxy || mayOldValue, // primitive can not effect new opt
+                        ),
+                    );
+                }
                 return Reflect.set(target, propKey, value, receiver);
+            },
+            get: (target, propKey, value, receiver) => {
+                return propKey === "_dep" ||
+                    propKey === "_subsrible" ||
+                    propKey === "_walkSub"
+                    ? this[propKey]
+                    : Reflect.get(target, propKey, receiver);
             },
         });
     }
@@ -65,8 +85,17 @@ export default class Observable {
      * 收集 watcher 至 dep
      * @param {Watcher} watcher
      */
-    subsrible(watcher) {
-        if (this.dep.find(item => watcher === item)) return;
-        this.dep.push(watcher);
+    _subsrible(watcher) {
+        this._walkSub(watcher);
+    }
+
+    _walkSub(watcher) {
+        if (this._dep.find(item => watcher === item)) return;
+        this._dep.push(watcher);
+        Object.keys(this).forEach(key => {
+            const target = this[key];
+            if (!target._dep) return;
+            target._walkSub(watcher);
+        });
     }
 }
