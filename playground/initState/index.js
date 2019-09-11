@@ -1,6 +1,7 @@
 const app = new Vue({
     data: {
         val: 1,
+        undef: undefined,
     },
     computed: {
         computedVal: {
@@ -13,12 +14,17 @@ const app = new Vue({
         },
         computedValNoUse() {
             return this.val + 2;
-        }
+        },
     },
     methods: {
         propFn() {
             console.log("propFn");
         },
+    },
+    mounted() {
+        setTimeout(() => {
+            this.undef = 2;
+        }, 2000);
     },
     components: {
         Child: {
@@ -34,7 +40,7 @@ const app = new Vue({
             },
             get template() {
                 function trackFn() {
-                    console.log('get child template');
+                    console.log("get child template");
                 }
                 trackFn(); // for performance tracking
                 return "<span>{{propFunc}} {{propVal}} {{propBool}}</span>";
