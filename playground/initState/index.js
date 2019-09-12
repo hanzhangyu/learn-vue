@@ -1,3 +1,9 @@
+const bus = new Vue({
+    data: {
+        busA: 'old bus A',
+    },
+});
+
 const app = new Vue({
     data() {
         // Property or method "notReactiveVal" is not defined on the instance but referenced during render. Make sure that this property is reactive, either in the data option, or for class-based components, by initializing the property.
@@ -20,6 +26,9 @@ const app = new Vue({
         computedValNoUse() {
             return this.val + 2;
         },
+        computedBusA() {
+            return bus.busA;
+        }
     },
     methods: {
         propFn() {
@@ -29,6 +38,9 @@ const app = new Vue({
     mounted() {
         setTimeout(() => {
             this.undef = 2;
+            setTimeout(() => {
+                bus.busA = 'new bus A'; // 改变成功
+            }, 1000);
         }, 2000);
     },
     components: {

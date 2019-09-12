@@ -6,8 +6,9 @@
     </head>
     <body>
         <div id="app">
-            {{notReactiveVal}}
-            {{undef}}
+            <p>{{computedBusA}}</p>
+            <p>{{notReactiveVal}}</p>
+            <p>{{undef}}</p>
             <Child
                 :prop-func="propFn"
                 :prop-val="computedVal"
