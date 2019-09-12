@@ -1,7 +1,12 @@
 const app = new Vue({
-    data: {
-        val: 1,
-        undef: undefined,
+    data() {
+        // Property or method "notReactiveVal" is not defined on the instance but referenced during render. Make sure that this property is reactive, either in the data option, or for class-based components, by initializing the property.
+        // 仔细看这个错误，错误是第一句，第二句是推荐
+        this.notReactiveVal = 1;
+        return {
+            val: 1,
+            undef: undefined,
+        };
     },
     computed: {
         computedVal: {
