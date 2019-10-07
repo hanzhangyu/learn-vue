@@ -3,14 +3,18 @@
         <span>count is {{ state.count }}</span>
         <span>plusOne is {{ state.double }}</span>
         <button @click="increment">count++</button>
+        <p>x: {{ x }}, y: {{ y }}</p>
     </div>
 </template>
 
 <script>
 import { reactive, computed } from "@vue/composition-api";
+import useMousePosition from "./components/useMousePosition";
 
 export default {
     setup() {
+        const { x, y } = useMousePosition();
+
         const state = reactive({
             count: 0,
             double: computed(() => state.count * 2),
@@ -23,6 +27,8 @@ export default {
         return {
             state,
             increment,
+            x,
+            y,
         };
     },
 };
